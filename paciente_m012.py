@@ -25,8 +25,8 @@ x_norm = (x_data - x_min) / (x_max - x_min)  # Normalização de x
 
 # Função para ajustar duas distribuições gaussianas
 def gaussian(x, amplitude1, mean1, stddev1, amplitude2, mean2, stddev2):
-    return (amplitude1 * np.exp(-0.5 * ((x - mean1) / stddev1)**2)) + \
-           (amplitude2 * np.exp(-0.5 * ((x - mean2) / stddev2)**2))
+    return ((amplitude1 * (1/stddev1 * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mean1) / stddev1)**2)) + \
+           ((amplitude2 * (1/stddev2 * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mean2) / stddev2)**2))
 
 # Estimativas iniciais para o ajuste das gaussianas
 initial_guess = [1, 0.3, 0.1, 1, 0.7, 0.1]
@@ -49,14 +49,14 @@ ax1.plot(x_norm, y_data, 'o-', color="black", markersize=4, label="Dados Experim
 ax1.plot(x_norm, y_gaussian, '--', color="gray", label="Ajuste Gaussiano")
 
 # Preencher áreas sob as gaussianas
-ax1.fill_between(x_norm, 0, amplitude1 * np.exp(-0.5 * ((x_norm - mean1) / stddev1)**2),
+ax1.fill_between(x_norm, 0, ((amplitude1 * (1/stddev1 * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x_norm - mean1) / stddev1)**2)),
                  color="red", alpha=0.8)
-ax1.fill_between(x_norm, 0, amplitude2 * np.exp(-0.5 * ((x_norm - mean2) / stddev2)**2),
+ax1.fill_between(x_norm, 0, ((amplitude2 * (1/stddev2 * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x_norm - mean2) / stddev2)**2)),
                  color="blue", alpha=0.5)
 
 # Destacar a região azul
 highlight_region = (x_norm >= 0.786) & (x_norm <= 1)
-ax1.fill_between(x_norm[highlight_region], 0, amplitude2 * np.exp(-0.5 * ((x_norm[highlight_region] - mean2) / stddev2)**2),
+ax1.fill_between(x_norm[highlight_region], 0, (amplitude2 * (1/stddev2 * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x_norm[highlight_region] - mean2) / stddev2)**2),
                  color="blue")
 
 # Adicionar linha vertical no meio das gaussianas
